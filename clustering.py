@@ -40,7 +40,7 @@ def rand_index_score(actual_labels, predicted_labels):
     tp_plus_fp = comb(np.bincount(actual_labels), 2).sum() # true positive + false positive
     tp_plus_fn = comb(np.bincount(predicted_labels), 2).sum() # true positive + false negative
 
-    A = np.c_[(actual_labels, predicted_labels)]
+    A = np.c_[(actual_labels, predicted_labels)] # Translates slice objects to concatenation along the second axis
 
     tp = sum(comb(np.bincount(A[A[:, 0] == i, 1]), 2).sum() for i in set(actual_labels))
     fp = tp_plus_fp - tp
@@ -49,6 +49,8 @@ def rand_index_score(actual_labels, predicted_labels):
     return (tp + tn) / (tp + fp + fn + tn)
 
 """compute rand index, from cluster arg which are actual label, and classes which are predicted labels by the algorithm.
+
+![0ec80af7aba3d18700e0c06940c3f277990f95c7.svg](data:image/svg+xml;base64,PHN2ZyB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgd2lkdGg9IjI5Ljc2NGV4IiBoZWlnaHQ9IjUuMzQzZXgiIHN0eWxlPSJ2ZXJ0aWNhbC1hbGlnbjogLTIuMDA1ZXg7IiB2aWV3Qm94PSIwIC0xNDM3LjIgMTI4MTQuOSAyMzAwLjMiIHJvbGU9ImltZyIgZm9jdXNhYmxlPSJmYWxzZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiBhcmlhLWxhYmVsbGVkYnk9Ik1hdGhKYXgtU1ZHLTEtVGl0bGUiPgo8dGl0bGUgaWQ9Ik1hdGhKYXgtU1ZHLTEtVGl0bGUiPntcZGlzcGxheXN0eWxlIFJJPXtcZnJhYyB7VFArVE59e1RQK0ZQK0ZOK1ROfX19PC90aXRsZT4KPGRlZnMgYXJpYS1oaWRkZW49InRydWUiPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGlkPSJFMS1NSk1BVEhJLTUyIiBkPSJNMjMwIDYzN1EyMDMgNjM3IDE5OCA2MzhUMTkzIDY0OVExOTMgNjc2IDIwNCA2ODJRMjA2IDY4MyAzNzggNjgzUTU1MCA2ODIgNTY0IDY4MFE2MjAgNjcyIDY1OCA2NTJUNzEyIDYwNlQ3MzMgNTYzVDczOSA1MjlRNzM5IDQ4NCA3MTAgNDQ1VDY0MyAzODVUNTc2IDM1MVQ1MzggMzM4TDU0NSAzMzNRNjEyIDI5NSA2MTIgMjIzUTYxMiAyMTIgNjA3IDE2MlQ2MDIgODBWNzFRNjAyIDUzIDYwMyA0M1Q2MTQgMjVUNjQwIDE2UTY2OCAxNiA2ODYgMzhUNzEyIDg1UTcxNyA5OSA3MjAgMTAyVDczNSAxMDVRNzU1IDEwNSA3NTUgOTNRNzU1IDc1IDczMSAzNlE2OTMgLTIxIDY0MSAtMjFINjMyUTU3MSAtMjEgNTMxIDRUNDg3IDgyUTQ4NyAxMDkgNTAyIDE2NlQ1MTcgMjM5UTUxNyAyOTAgNDc0IDMxM1E0NTkgMzIwIDQ0OSAzMjFUMzc4IDMyM0gzMDlMMjc3IDE5M1EyNDQgNjEgMjQ0IDU5UTI0NCA1NSAyNDUgNTRUMjUyIDUwVDI2OSA0OFQzMDIgNDZIMzMzUTMzOSAzOCAzMzkgMzdUMzM2IDE5UTMzMiA2IDMyNiAwSDMxMVEyNzUgMiAxODAgMlExNDYgMiAxMTcgMlQ3MSAyVDUwIDFRMzMgMSAzMyAxMFEzMyAxMiAzNiAyNFE0MSA0MyA0NiA0NVE1MCA0NiA2MSA0Nkg2N1E5NCA0NiAxMjcgNDlRMTQxIDUyIDE0NiA2MVExNDkgNjUgMjE4IDMzOVQyODcgNjI4UTI4NyA2MzUgMjMwIDYzN1pNNjMwIDU1NFE2MzAgNTg2IDYwOSA2MDhUNTIzIDYzNlE1MjEgNjM2IDUwMCA2MzZUNDYyIDYzN0g0NDBRMzkzIDYzNyAzODYgNjI3UTM4NSA2MjQgMzUyIDQ5NFQzMTkgMzYxUTMxOSAzNjAgMzg4IDM2MFE0NjYgMzYxIDQ5MiAzNjdRNTU2IDM3NyA1OTIgNDI2UTYwOCA0NDkgNjE5IDQ4NlQ2MzAgNTU0WiI+PC9wYXRoPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGlkPSJFMS1NSk1BVEhJLTQ5IiBkPSJNNDMgMVEyNiAxIDI2IDEwUTI2IDEyIDI5IDI0UTM0IDQzIDM5IDQ1UTQyIDQ2IDU0IDQ2SDYwUTEyMCA0NiAxMzYgNTNRMTM3IDUzIDEzOCA1NFExNDMgNTYgMTQ5IDc3VDE5OCAyNzNRMjEwIDMxOCAyMTYgMzQ0UTI4NiA2MjQgMjg2IDYyNlEyODQgNjMwIDI4NCA2MzFRMjc0IDYzNyAyMTMgNjM3SDE5M1ExODQgNjQzIDE4OSA2NjJRMTkzIDY3NyAxOTUgNjgwVDIwOSA2ODNIMjEzUTI4NSA2ODEgMzU5IDY4MVE0ODEgNjgxIDQ4NyA2ODNINDk3UTUwNCA2NzYgNTA0IDY3MlQ1MDEgNjU1VDQ5NCA2MzlRNDkxIDYzNyA0NzEgNjM3UTQ0MCA2MzcgNDA3IDYzNFEzOTMgNjMxIDM4OCA2MjNRMzgxIDYwOSAzMzcgNDMyUTMyNiAzODUgMzE1IDM0MVEyNDUgNjUgMjQ1IDU5UTI0NSA1MiAyNTUgNTBUMzA3IDQ2SDMzOVEzNDUgMzggMzQ1IDM3VDM0MiAxOVEzMzggNiAzMzIgMEgzMTZRMjc5IDIgMTc5IDJRMTQzIDIgMTEzIDJUNjUgMlQ0MyAxWiI+PC9wYXRoPgo8cGF0aCBzdHJva2Utd2lkdGg9IjEiIGlkPSJFMS1NSk1BSU4tM0QiIGQ9Ik01NiAzNDdRNTYgMzYwIDcwIDM2N0g3MDdRNzIyIDM1OSA3MjIgMzQ3UTcyMiAzMzYgNzA4IDMyOEwzOTAgMzI3SDcyUTU2IDMzMiA1NiAzNDdaTTU2IDE1M1E1NiAxNjggNzIgMTczSDcwOFE3MjIgMTYzIDcyMiAxNTNRNzIyIDE0MCA3MDcgMTMzSDcwUTU2IDE0MCA1NiAxNTNaIj48L3BhdGg+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgaWQ9IkUxLU1KTUFUSEktNTQiIGQ9Ik00MCA0MzdRMjEgNDM3IDIxIDQ0NVEyMSA0NTAgMzcgNTAxVDcxIDYwMkw4OCA2NTFROTMgNjY5IDEwMSA2NzdINTY5SDY1OVE2OTEgNjc3IDY5NyA2NzZUNzA0IDY2N1E3MDQgNjYxIDY4NyA1NTNUNjY4IDQ0NFE2NjggNDM3IDY0OSA0MzdRNjQwIDQzNyA2MzcgNDM3VDYzMSA0NDJMNjI5IDQ0NVE2MjkgNDUxIDYzNSA0OTBUNjQxIDU1MVE2NDEgNTg2IDYyOCA2MDRUNTczIDYyOVE1NjggNjMwIDUxNSA2MzFRNDY5IDYzMSA0NTcgNjMwVDQzOSA2MjJRNDM4IDYyMSAzNjggMzQzVDI5OCA2MFEyOTggNDggMzg2IDQ2UTQxOCA0NiA0MjcgNDVUNDM2IDM2UTQzNiAzMSA0MzMgMjJRNDI5IDQgNDI0IDFMNDIyIDBRNDE5IDAgNDE1IDBRNDEwIDAgMzYzIDFUMjI4IDJROTkgMiA2NCAwSDQ5UTQzIDYgNDMgOVQ0NSAyN1E0OSA0MCA1NSA0Nkg4M0g5NFExNzQgNDYgMTg5IDU1UTE5MCA1NiAxOTEgNTZRMTk2IDU5IDIwMSA3NlQyNDEgMjMzUTI1OCAzMDEgMjY5IDM0NFEzMzkgNjE5IDMzOSA2MjVRMzM5IDYzMCAzMTAgNjMwSDI3OVEyMTIgNjMwIDE5MSA2MjRRMTQ2IDYxNCAxMjEgNTgzVDY3IDQ2N1E2MCA0NDUgNTcgNDQxVDQzIDQzN0g0MFoiPjwvcGF0aD4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBpZD0iRTEtTUpNQVRISS01MCIgZD0iTTI4NyA2MjhRMjg3IDYzNSAyMzAgNjM3UTIwNiA2MzcgMTk5IDYzOFQxOTIgNjQ4UTE5MiA2NDkgMTk0IDY1OVEyMDAgNjc5IDIwMyA2ODFUMzk3IDY4M1E1ODcgNjgyIDYwMCA2ODBRNjY0IDY2OSA3MDcgNjMxVDc1MSA1MzBRNzUxIDQ1MyA2ODUgMzg5UTYxNiAzMjEgNTA3IDMwM1E1MDAgMzAyIDQwMiAzMDFIMzA3TDI3NyAxODJRMjQ3IDY2IDI0NyA1OVEyNDcgNTUgMjQ4IDU0VDI1NSA1MFQyNzIgNDhUMzA1IDQ2SDMzNlEzNDIgMzcgMzQyIDM1UTM0MiAxOSAzMzUgNVEzMzAgMCAzMTkgMFEzMTYgMCAyODIgMVQxODIgMlExMjAgMiA4NyAyVDUxIDFRMzMgMSAzMyAxMVEzMyAxMyAzNiAyNVE0MCA0MSA0NCA0M1Q2NyA0NlE5NCA0NiAxMjcgNDlRMTQxIDUyIDE0NiA2MVExNDkgNjUgMjE4IDMzOVQyODcgNjI4Wk02NDUgNTU0UTY0NSA1NjcgNjQzIDU3NVQ2MzQgNTk3VDYwOSA2MTlUNTYwIDYzNVE1NTMgNjM2IDQ4MCA2MzdRNDYzIDYzNyA0NDUgNjM3VDQxNiA2MzZUNDA0IDYzNlEzOTEgNjM1IDM4NiA2MjdRMzg0IDYyMSAzNjcgNTUwVDMzMiA0MTJUMzE0IDM0NFEzMTQgMzQyIDM5NSAzNDJINDA3SDQzMFE1NDIgMzQyIDU5MCAzOTJRNjE3IDQxOSA2MzEgNDcxVDY0NSA1NTRaIj48L3BhdGg+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgaWQ9IkUxLU1KTUFJTi0yQiIgZD0iTTU2IDIzN1Q1NiAyNTBUNzAgMjcwSDM2OVY0MjBMMzcwIDU3MFEzODAgNTgzIDM4OSA1ODNRNDAyIDU4MyA0MDkgNTY4VjI3MEg3MDdRNzIyIDI2MiA3MjIgMjUwVDcwNyAyMzBINDA5Vi02OFE0MDEgLTgyIDM5MSAtODJIMzg5SDM4N1EzNzUgLTgyIDM2OSAtNjhWMjMwSDcwUTU2IDIzNyA1NiAyNTBaIj48L3BhdGg+CjxwYXRoIHN0cm9rZS13aWR0aD0iMSIgaWQ9IkUxLU1KTUFUSEktNEUiIGQ9Ik0yMzQgNjM3UTIzMSA2MzcgMjI2IDYzN1EyMDEgNjM3IDE5NiA2MzhUMTkxIDY0OVExOTEgNjc2IDIwMiA2ODJRMjA0IDY4MyAyOTkgNjgzUTM3NiA2ODMgMzg3IDY4M1Q0MDEgNjc3UTYxMiAxODEgNjE2IDE2OEw2NzAgMzgxUTcyMyA1OTIgNzIzIDYwNlE3MjMgNjMzIDY1OSA2MzdRNjM1IDYzNyA2MzUgNjQ4UTYzNSA2NTAgNjM3IDY2MFE2NDEgNjc2IDY0MyA2NzlUNjUzIDY4M1E2NTYgNjgzIDY4NCA2ODJUNzY3IDY4MFE4MTcgNjgwIDg0MyA2ODFUODczIDY4MlE4ODggNjgyIDg4OCA2NzJRODg4IDY1MCA4ODAgNjQyUTg3OCA2MzcgODU4IDYzN1E3ODcgNjMzIDc2OSA1OTdMNjIwIDdRNjE4IDAgNTk5IDBRNTg1IDAgNTgyIDJRNTc5IDUgNDUzIDMwNUwzMjYgNjA0TDI2MSAzNDRRMTk2IDg4IDE5NiA3OVEyMDEgNDYgMjY4IDQ2SDI3OFEyODQgNDEgMjg0IDM4VDI4MiAxOVEyNzggNiAyNzIgMEgyNTlRMjI4IDIgMTUxIDJRMTIzIDIgMTAwIDJUNjMgMlQ0NiAxUTMxIDEgMzEgMTBRMzEgMTQgMzQgMjZUMzkgNDBRNDEgNDYgNjIgNDZRMTMwIDQ5IDE1MCA4NVExNTQgOTEgMjIxIDM2MkwyODkgNjM0UTI4NyA2MzUgMjM0IDYzN1oiPjwvcGF0aD4KPHBhdGggc3Ryb2tlLXdpZHRoPSIxIiBpZD0iRTEtTUpNQVRISS00NiIgZD0iTTQ4IDFRMzEgMSAzMSAxMVEzMSAxMyAzNCAyNVEzOCA0MSA0MiA0M1Q2NSA0NlE5MiA0NiAxMjUgNDlRMTM5IDUyIDE0NCA2MVExNDYgNjYgMjE1IDM0MlQyODUgNjIyUTI4NSA2MjkgMjgxIDYyOVEyNzMgNjMyIDIyOCA2MzRIMTk3UTE5MSA2NDAgMTkxIDY0MlQxOTMgNjU5UTE5NyA2NzYgMjAzIDY4MEg3NDJRNzQ5IDY3NiA3NDkgNjY5UTc0OSA2NjQgNzM2IDU1N1Q3MjIgNDQ3UTcyMCA0NDAgNzAyIDQ0MEg2OTBRNjgzIDQ0NSA2ODMgNDUzUTY4MyA0NTQgNjg2IDQ3N1Q2ODkgNTMwUTY4OSA1NjAgNjgyIDU3OVQ2NjMgNjEwVDYyNiA2MjZUNTc1IDYzM1Q1MDMgNjM0SDQ4MFEzOTggNjMzIDM5MyA2MzFRMzg4IDYyOSAzODYgNjIzUTM4NSA2MjIgMzUyIDQ5MkwzMjAgMzYzSDM3NVEzNzggMzYzIDM5OCAzNjNUNDI2IDM2NFQ0NDggMzY3VDQ3MiAzNzRUNDg5IDM4NlE1MDIgMzk4IDUxMSA0MTlUNTI0IDQ1N1Q1MjkgNDc1UTUzMiA0ODAgNTQ4IDQ4MEg1NjBRNTY3IDQ3NSA1NjcgNDcwUTU2NyA0NjcgNTM2IDMzOVQ1MDIgMjA3UTUwMCAyMDAgNDgyIDIwMEg0NzBRNDYzIDIwNiA0NjMgMjEyUTQ2MyAyMTUgNDY4IDIzNFQ0NzMgMjc0UTQ3MyAzMDMgNDUzIDMxMFQzNjQgMzE3SDMwOUwyNzcgMTkwUTI0NSA2NiAyNDUgNjBRMjQ1IDQ2IDMzNCA0NkgzNTlRMzY1IDQwIDM2NSAzOVQzNjMgMTlRMzU5IDYgMzUzIDBIMzM2UTI5NSAyIDE4NSAyUTEyMCAyIDg2IDJUNDggMVoiPjwvcGF0aD4KPC9kZWZzPgo8ZyBzdHJva2U9ImN1cnJlbnRDb2xvciIgZmlsbD0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjAiIHRyYW5zZm9ybT0ibWF0cml4KDEgMCAwIC0xIDAgMCkiIGFyaWEtaGlkZGVuPSJ0cnVlIj4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNTIiIHg9IjAiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQVRISS00OSIgeD0iNzU5IiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFJTi0zRCIgeD0iMTU0MSIgeT0iMCI+PC91c2U+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDI1OTgsMCkiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMjAsMCkiPgo8cmVjdCBzdHJva2U9Im5vbmUiIHdpZHRoPSI5OTc2IiBoZWlnaHQ9IjYwIiB4PSIwIiB5PSIyMjAiPjwvcmVjdD4KPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjg1Miw2NzYpIj4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNTQiIHg9IjAiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQVRISS01MCIgeD0iNzA0IiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFJTi0yQiIgeD0iMTY3OCIgeT0iMCI+PC91c2U+CiA8dXNlIHhsaW5rOmhyZWY9IiNFMS1NSk1BVEhJLTU0IiB4PSIyNjc4IiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNEUiIHg9IjMzODMiIHk9IjAiPjwvdXNlPgo8L2c+CjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDYwLC03MDQpIj4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNTQiIHg9IjAiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQVRISS01MCIgeD0iNzA0IiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFJTi0yQiIgeD0iMTY3OCIgeT0iMCI+PC91c2U+CiA8dXNlIHhsaW5rOmhyZWY9IiNFMS1NSk1BVEhJLTQ2IiB4PSIyNjc4IiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNTAiIHg9IjM0MjgiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQUlOLTJCIiB4PSI0NDAyIiB5PSIwIj48L3VzZT4KIDx1c2UgeGxpbms6aHJlZj0iI0UxLU1KTUFUSEktNDYiIHg9IjU0MDIiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQVRISS00RSIgeD0iNjE1MiIgeT0iMCI+PC91c2U+CiA8dXNlIHhsaW5rOmhyZWY9IiNFMS1NSk1BSU4tMkIiIHg9IjcyNjMiIHk9IjAiPjwvdXNlPgogPHVzZSB4bGluazpocmVmPSIjRTEtTUpNQVRISS01NCIgeD0iODI2MyIgeT0iMCI+PC91c2U+CiA8dXNlIHhsaW5rOmhyZWY9IiNFMS1NSk1BVEhJLTRFIiB4PSI4OTY4IiB5PSIwIj48L3VzZT4KPC9nPgo8L2c+CjwvZz4KPC9nPgo8L3N2Zz4=)
 
 *  bincount -> Count number of occurrences of each value in array of non-negative ints.
 
@@ -74,10 +76,12 @@ class Cluster:
     preds = [self.predicted_label] * len(self.predicted_file_names)
 
     return self.actual_file_names_labels, preds
-
+  
+  @staticmethod
   def build_cluster_objects_from(algorithm, persons_file_names, actual_unique_labels):
     clusters = [] # indexes are cluster id
     
+    # each algorithm has different attribute so we should check for cluster number attr
     if hasattr(algorithm, 'n_clusters') and algorithm.n_clusters is not None:
       n_clusters = algorithm.n_clusters
     elif hasattr(algorithm, 'n_clusters_') and algorithm.n_clusters_ is not None:
@@ -85,9 +89,12 @@ class Cluster:
     else:
       n_clusters = len(set(algorithm.labels_))
     
+    # create a Cluster object for number of cluster founded
     for cluster_id in range(1, n_clusters + 1):
       clusters.append(Cluster(cluster_id=cluster_id))
     
+    # each cluster label is for the data we provided in the same index so we zip original data, labels and their actual labels
+    # update each cluster with its own members
     for file_name, predicted_cluster_id, actual_label in zip(persons_file_names, algorithm.labels_, actual_unique_labels):
       clusters[predicted_cluster_id - 1].predicted_file_names.append(file_name) # append file while it is predicted for this cluster 
       clusters[predicted_cluster_id - 1].actual_file_names_labels.append(actual_label) # append the real label for this file name
@@ -118,17 +125,20 @@ class ClusterWorker:
     self._infer_lables()
   
   def _infer_lables(self):
+    # generate Clusters
     kmeans_clusters = Cluster.build_cluster_objects_from(self.algorithm, persons_file_names, unique_labels_list)
 
     preds = np.array([]).astype(np.int64)
     acs = np.array([]).astype(np.int64)
     
+    # unpack each cluster data with their infered label
     for cl in kmeans_clusters:
       cl.infer_cluster_label()
       ac, pred = cl.predicted_and_actual_label_list()
       preds = np.append(preds, pred)
       acs = np.append(acs, ac)
-
+    
+    # flat labels so that we process them
     self.flattened_predicted_labels = preds.flatten()
     self.flattened_actual_label = acs.flatten()
 
@@ -169,30 +179,25 @@ class ClusterStatictics:
 # Loading Data
 """
 
-path = r"/content/drive/MyDrive/AI/Clustering/ORL"
+class DataLoader:
 
-os.chdir(path)
+  dataSetPath = '/content/drive/MyDrive/AI/Clustering/ORL'
 
-persons_file_names = []
+  @staticmethod
+  def generate_raw_dataset(persons_file_names, model):
+    data = {}
+    for person_name in persons_file_names:
+      try:
+        feat = DataLoader.extract_features(person_name, model)
+        data[person_name] = feat
+      except:
+        continue
+    return data
 
-with os.scandir(path) as files:
-
-    for file in files:
-        if file.name.endswith('.jpg'):
-
-          base = os.path.basename(file)
-          name = os.path.splitext(base)[0]
-          persons_file_names.append(name)
-
-"""Load filenames wothouy .jpg extension"""
-
-# model = VGG16()
-# model = Model(inputs = model.inputs, outputs = model.layers[-2].output)
-
-"""cnn model which we can use to improve clustering"""
-
-def extract_features(file, model):
-    file_path = '/content/drive/MyDrive/AI/Clustering/ORL' + '/' + file + '.jpg'
+  @staticmethod
+  def extract_features(file, model):
+    # feature extractor method can use cnn or pixels
+    file_path = DataLoader.dataSetPath + '/' + file + '.jpg'
 
     img = load_img(file_path, target_size=(224,224))
 
@@ -207,27 +212,39 @@ def extract_features(file, model):
 
       return features
     else:
+      # in order to use pixel we should reshape it to 2-dim array from 3-dim
       img = img.reshape(img.shape[0], (img.shape[1]*img.shape[2]))
 
       return img
 
-"""feature extractor method can use cnn or pixels
+  @staticmethod
+  def generate_vgg16_network():
+    # cnn model which we can use to improve clustering
+    cnn = VGG16()
+    model = Model(inputs = cnn.inputs, outputs = cnn.layers[-2].output)
+    return model
 
-> in order to use pixel we should reshape it to 2-dim array from 3-dim
-"""
+  @staticmethod
+  def generate_file_names_without_extension(path= r"/content/drive/MyDrive/AI/Clustering/ORL"):
+    # Load filenames without .jpg extension
+    os.chdir(path)
+    persons_file_names = []
+    
+    with os.scandir(path) as files:
+      for file in files:
+        if file.name.endswith('.jpg'):
+          base = os.path.basename(file)
+          name = os.path.splitext(base)[0]
+          persons_file_names.append(name)
+    return persons_file_names
 
-data = {}
+persons_file_names = DataLoader.generate_file_names_without_extension()
 
-for person_name in persons_file_names:
-    try:
-        # feat = extract_features(person_name, model)
-        feat = extract_features(person_name, None)
-        data[person_name] = feat
-    except:
-      print('execp')
-      continue
+"""Load filenames without .jpg extension"""
 
-"""extract features for each image and store them in dic
+data = DataLoader.generate_raw_dataset(persons_file_names, None)
+
+"""extract raw features for each image and store them in dic
 
 # Data Preprocessing
 """
@@ -246,6 +263,7 @@ filenames = np.array(list(data.keys()))
 
 feat = np.array(list(data.values()))
 
+# create 2 dim features
 feat = feat.reshape(feat.shape[0], (feat.shape[1]*feat.shape[2]))
 
 # feat = feat.reshape(-1,4096)
@@ -258,7 +276,7 @@ pca = PCA(n_components=100, random_state=22)
 pca.fit(feat)
 transformed_pca = pca.transform(feat)
 
-"""Componnent reducer for faster computation
+"""dimensionality reduction for faster computation
 
 # KMeans
 """
@@ -394,7 +412,7 @@ eps_predictor = DBSCANQuality(feat)
 eps_predictor.measure()
 eps_predictor.plot_result()
 
-"""In the above code you can clearly see that for epsilons lower than 7000, we had a cluster for each data, which results into high purity and rand-index but not usefull. and for epsilons more than 15000 we get less clusters which results into bad accuracy and purity. <br>
+"""We can see that for epsilons lower than 7000, we had a cluster for each data, which results into high purity and rand-index but not usefull. and for epsilons more than 15000 we get less clusters which results into bad accuracy and purity. <br>
 But if we choose epsilons between 7000 to 15000, it's more ideal. and according to the plots, epsilon 12000 is the best for this dataset.
 """
 
