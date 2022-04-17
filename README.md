@@ -15,6 +15,7 @@ Most unique thing about VGG16 is that instead of having a large number of hyper-
 In the end it has 2 FC(fully connected layers) followed by a softmax for output. The 16 in VGG16 refers to it has 16 layers that have weights. This network is a pretty large network and it has about 138 million (approx) parameters.
 
 > Pass `transformed_pca` to Cluster classes in order to use reduced features with PCA algorithm.
+> Pass VGG16 model to `DataLoader.generate_raw_dataset` method to use CNN as features.
 
 ## Supported Cluster Algorithm
 
